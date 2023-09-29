@@ -1,5 +1,6 @@
 package com.example.amphibians.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,16 +8,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.amphibians.networking.Amphibian
 
 @Composable
@@ -60,7 +69,8 @@ fun AmphibiansList(amphibianList: List<Amphibian>, modifier: Modifier = Modifier
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(8.dp)
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(amphibianList) {amphibian ->
             AmphibianCard(amphibian)
@@ -70,19 +80,39 @@ fun AmphibiansList(amphibianList: List<Amphibian>, modifier: Modifier = Modifier
 
 @Composable
 fun AmphibianCard(amphibian: Amphibian, modifier: Modifier = Modifier) {
+    val header = "${amphibian.name} (${amphibian.type})"
+
     Card(
-        modifier = modifier.padding(horizontal = 8.dp, vertical = 12.dp)
+       modifier = modifier.padding(horizontal = 8.dp),
+        shape = RoundedCornerShape(0.dp)
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp)
+                .padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(amphibian.name)
-            Text(amphibian.type)
-            Text(amphibian.imgSrc)
-            Text(amphibian.description)
+            Text(
+                text = header,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(amphibian.imgSrc)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.Crop
+            )
+            Text(
+                text = amphibian.description,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(horizontal = 8.dp),
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }
