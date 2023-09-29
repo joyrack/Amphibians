@@ -4,14 +4,16 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 
-private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com"
+private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com/"
 
 // creating the retrofit object
 private val retrofit = Retrofit.Builder()
-    .baseUrl(BASE_URL)
+    //.addConverterFactory(ScalarsConverterFactory.create())    // to convert json to string
     .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+    .baseUrl(BASE_URL)
     .build()
 
 

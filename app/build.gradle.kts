@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
 }
 
 android {
@@ -79,4 +80,10 @@ dependencies {
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+
+    implementation("com.squareup.retrofit2:converter-scalars:2.1.0")
+
 }
