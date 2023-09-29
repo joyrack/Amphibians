@@ -1,12 +1,14 @@
 package com.example.amphibians.data
 
 import com.example.amphibians.networking.Amphibian
-import com.example.amphibians.networking.AmphibiansApi
+import com.example.amphibians.networking.AmphibiansApiService
 
-class AmphibiansRepository {
+class AmphibiansRepository(
+    private val retrofitService: AmphibiansApiService
+) {
     suspend fun getAmphibiansRepo() : List<Amphibian>? {
         return try {
-            AmphibiansApi.retrofitService.getAmphibians()
+            retrofitService.getAmphibians()
         } catch (e : Exception) {
             null
         }

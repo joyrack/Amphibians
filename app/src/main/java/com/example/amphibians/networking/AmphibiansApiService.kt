@@ -7,16 +7,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 
-private const val BASE_URL = "https://android-kotlin-fun-mars-server.appspot.com/"
-
-// creating the retrofit object
-private val retrofit = Retrofit.Builder()
-    //.addConverterFactory(ScalarsConverterFactory.create())    // to convert json to string
-    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-    .baseUrl(BASE_URL)
-    .build()
-
-
 /**
  * Creating an interface that defines how retrofit talks
  * to the web server using HTTP requests
@@ -26,14 +16,3 @@ interface AmphibiansApiService {
     suspend fun getAmphibians(): List<Amphibian>
 }
 
-/**
- * This object is the public singleton object that the rest of the app can access
- */
-object AmphibiansApi {
-    // using "lazy initialization" to avoid unnecessary computation
-    // or use of other computing resources.
-    // The object is only initialized when we actually need it
-    val retrofitService: AmphibiansApiService by lazy {
-        retrofit.create(AmphibiansApiService::class.java)
-    }
-}

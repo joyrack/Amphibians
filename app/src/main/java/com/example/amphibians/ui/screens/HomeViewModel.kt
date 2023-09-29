@@ -1,10 +1,14 @@
 package com.example.amphibians.ui.screens
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.amphibians.AmphibiansApplication
 import com.example.amphibians.data.AmphibiansRepository
 import com.example.amphibians.networking.Amphibian
-import com.example.amphibians.networking.AmphibiansApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -16,12 +20,14 @@ sealed interface HomeUiState {
     data class ListState(val amphibianList: List<Amphibian>): HomeUiState
 }
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val repository: AmphibiansRepository
+) : ViewModel() {
     // initial state is loading
     private var _amphibianState = MutableStateFlow<HomeUiState>(HomeUiState.LoadingState)
     val amphibianState = _amphibianState.asStateFlow()
 
-    private val repository = AmphibiansRepository()
+   // private val repository = AmphibiansRepository()
 
     init {
         getAmphibian()
@@ -37,6 +43,16 @@ class HomeViewModel : ViewModel() {
                 _amphibianState.value = HomeUiState.ListState(resultList)
             }
 
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as AmphibiansApplication)
+                val amphibiansRepository = application.container.repository
+                HomeViewModel(amphibiansRepository)
+            }
         }
     }
 }
